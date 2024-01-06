@@ -805,9 +805,9 @@ i32 alphabeta(Position &pos,
                                           min(max(hh_table[pos.flipped][!gain][move.from][move.to] / 128, -2), 2),
                                       0)
                                 : 0;
+            assert(reduction >= 0);
 
         zero_window:
-            assert(reduction >= 0);
             score = -alphabeta(npos,
                                -alpha - 1,
                                -alpha,
@@ -823,8 +823,10 @@ i32 alphabeta(Position &pos,
                                hh_table);
 
             if (reduction > 0 && score > alpha) {
-                reduction = 0;
-                goto zero_window;
+                i32 orig_reduction = reduction;
+                reduction = (score < best_score + depth - reduction - 1) - (score > best_score + 64 + 10 * reduction);
+                if (reduction < orig_reduction)
+                    goto zero_window;
             }
 
             if (score > alpha && score < beta)
