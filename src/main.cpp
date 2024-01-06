@@ -823,7 +823,7 @@ i32 alphabeta(Position &pos,
                                hh_table);
 
             if (reduction > 0 && score > alpha) {
-                i32 orig_reduction = reduction;
+                const auto orig_reduction = reduction;
                 reduction = (score < best_score + depth - reduction - 1) - (score > best_score + 64 + 10 * reduction);
                 if (reduction < orig_reduction)
                     goto zero_window;
